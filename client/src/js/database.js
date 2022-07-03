@@ -1,7 +1,7 @@
 import { openDB } from 'idb';
 
 const initdb = async () =>
-  openDB('jateDb', 1, {
+  openDB('jate', 1, {
     upgrade(db) {
       if (db.objectStoreNames.contains('jate')) {
         console.log('jate database already exists');
@@ -16,12 +16,12 @@ const initdb = async () =>
 export const putDb = async (content) => {
   console.log('Update database');
   try {
-    const jateDb = await openDB('jateDb', 1);
+    const jateDb = await openDB('jate', 1);
     const tx = jateDb.transaction('jate', 'readwrite');
     const store = tx.objectStore('jate');
-    const request = store.put(({ content: content }));
+    const request = store.put({id: 1, content: content });
     const result = await request;
-    console.log('Data saved to jateDb database', result);
+    console.log('Data saved to jate database', result);
 
   } catch (error) {
     console.error('putDb not implemented', error);
@@ -33,20 +33,19 @@ export const putDb = async (content) => {
 // TODO: Add logic for a method that gets all the content from the database
 export const getDb = async () => {
   try {
-    console.log('Get everything from the database', result);
-    const jateDb = await openDB('jateDb', 1);
+    console.log('Getting everything from the database');
+    const jateDb = await openDB('jate', 1);
     const tx = jateDb.transaction('jate', 'readonly');
     const store = tx.objectStore('jate');
-    const request = store.getAll();
+    const request = store.get(1);
     const result = await request;
-    console.log('result.content', result);
-    return result;
+    console.log('result', result);
+    // return result.content;
     
     //error handling
   } catch (error) {
     console.error('getDb not implemented', error);
   };
 };
-
 
 initdb();
