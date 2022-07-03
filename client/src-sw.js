@@ -1,4 +1,4 @@
-const { offlineFallback, warmStrategyCache } = require('workbox-recipes');
+const { offlineFallback, warmStrategyCache, staticResourceCache } = require('workbox-recipes');
 const { CacheFirst } = require('workbox-strategies');
 const { registerRoute } = require('workbox-routing');
 const { CacheableResponsePlugin } = require('workbox-cacheable-response');
@@ -27,4 +27,23 @@ warmStrategyCache({
 registerRoute(({ request }) => request.mode === 'navigate', pageCache);
 
 // TODO: Implement asset caching
+//giving this a try from the docs: https://developer.chrome.com/docs/workbox/modules/workbox-recipes/
+  
+  registerRoute(({request}) => 
+  request.destination === 'style' ||
+    request.destination === 'script' ||
+    request.destination === 'worker',
+
+  new StaleWhileRevalidate({
+    cacheName: 'static-assets-cache',
+    plugns: [
+      new CacheableResponsePlugin({
+  statuses: [0, 200],
+})
+    ],
+
+  })
+);
+
+
 registerRoute();
