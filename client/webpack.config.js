@@ -4,7 +4,7 @@ const path = require('path');
 const { InjectManifest } = require('workbox-webpack-plugin');
 
 // TODO: Add and configure workbox plugins for a service worker and manifest file.
-// TODO: Add CSS loaders and babel to webpack.
+// TODO: Add CSS loaders and babel to webpack. (complete)
 
 module.exports = () => {
   return {
@@ -18,11 +18,59 @@ module.exports = () => {
       path: path.resolve(__dirname, 'dist'),
     },
     plugins: [
+      //HTML Webpac Plugin to auto-generate index.html file when bundling
+      new HtmlWebpackPlugin({
+        template: './index.html',
+        title: 'JATE'
+      }),
+
+      //plugin for service worker
+      new InjectManifest({
+        swSrc: './src-sw.js',
+        swDest: './src-sw.js'
+      }),
+
+      //plugin for manifest.js file
+      new WebpackPwaManifest({
+        fingerprints: false,
+        inject: true,
+        name: "Just Another Text Editor",
+        short_name: "JATE",
+        description: "An in-browser text editor with offline capabilities.",
+        background_color: '#beecfa',
+        theme_color: '#beecfa',
+        start_url: './',
+        publicPath: '/',
+        icons: [
+          {
+            src: path.resolve('client/src/images/logo.png'),
+            sizes: [96, 128, 192, 256, 284, 512],
+            destination: path.join('assets', 'icons'),
+        }
+        ],
+})
       
     ],
 
     module: {
       rules: [
+      
+      //inject css into the dom + interpert @import and url()
+        {
+          test: /\.css$/i,
+          use: ['style-loader', 'css-loader'],
+        },
+        //allow for transpiling with babel
+        {
+          test: /\.m?js$/,
+          exclude: /(node_modules|bower_components)/,
+          use: {
+            loader: 'babel-loader',
+            options: {
+              presets: ['@babel/preset-env']
+            }
+          }
+        },
         
       ],
     },
