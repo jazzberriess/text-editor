@@ -11,7 +11,7 @@ module.exports = () => {
     mode: 'development',
     entry: {
       main: './src/js/index.js',
-      install: './src/js/install.js'
+      install: './src/js/install.js',
     },
     output: {
       filename: '[name].bundle.js',
@@ -21,22 +21,22 @@ module.exports = () => {
       //HTML Webpac Plugin to auto-generate index.html file when bundling
       new HtmlWebpackPlugin({
         template: './index.html',
-        title: 'JATE'
+        title: 'JATE',
       }),
 
       //plugin for service worker
       new InjectManifest({
         swSrc: './src-sw.js',
-        swDest: './src-sw.js'
+        swDest: './src-sw.js',
       }),
 
       //plugin for manifest.js file
       new WebpackPwaManifest({
         fingerprints: false,
         inject: true,
-        name: "Just Another Text Editor",
-        short_name: "JATE",
-        description: "An in-browser text editor with offline capabilities.",
+        name: 'Just Another Text Editor',
+        short_name: 'JATE',
+        description: 'An in-browser text editor with offline capabilities.',
         background_color: '#beecfa',
         theme_color: '#beecfa',
         start_url: './',
@@ -44,18 +44,16 @@ module.exports = () => {
         icons: [
           {
             src: path.resolve('src/images/logo.png'),
-            sizes: [96, 128, 192, 256, 284, 512],
+            sizes: [48, 96, 128, 192, 256, 284, 512],
             destination: path.join('assets', 'icons'),
           },
         ],
-})
-      
+      }),
     ],
 
     module: {
       rules: [
-      
-      //inject css into the dom + interpert @import and url()
+        //inject css into the dom + interpert @import and url()
         {
           test: /\.css$/i,
           use: ['style-loader', 'css-loader'],
@@ -67,11 +65,10 @@ module.exports = () => {
           use: {
             loader: 'babel-loader',
             options: {
-              presets: ['@babel/preset-env']
-            }
-          }
+              presets: ['@babel/preset-env'],
+            },
+          },
         },
-        
       ],
     },
   };
