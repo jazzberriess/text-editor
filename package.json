@@ -1,7 +1,10 @@
 {
   "name": "jate",
   "version": "1.0.0",
-  "description": "",
+  "engines": {
+    "node": "16.x"
+  },
+  "description": "An in-browser text editor that will also work when the internet is offline! ",
   "main": "server.js",
   "scripts": {
     "start:dev": "concurrently \"cd server && npm run server\" \"cd client && npm run dev\"",
