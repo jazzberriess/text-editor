@@ -6,7 +6,6 @@
   },
   "scripts": {
     "dev": "webpack-dev-server",
-    "heroku-prebuild": "npm install --dev",
     "build": "webpack --mode production",
     "start": "webpack --watch"
   },
