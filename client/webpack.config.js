@@ -21,6 +21,7 @@ module.exports = () => {
       //HTML Webpac Plugin to auto-generate index.html file when bundling
       new HtmlWebpackPlugin({
         template: './index.html',
+        favicon: './favicon.ico',
         title: 'JATE',
       }),
 
@@ -67,6 +68,15 @@ module.exports = () => {
             options: {
               presets: ['@babel/preset-env'],
             },
+          },
+        },
+        //for the favicon: https://stackoverflow.com/questions/52024445/index-html-template-isnt-loading-favicon-for-htmlwebpackplugin/66761341#66761341
+        {
+          test: /\.ico$/i,
+          type: 'asset/resource',
+          // Use 'generator' to output unique name (based on webpack pattern e.g. [name], [ext], etc.)
+          generator: {
+            filename: '[name][ext][query]',
           },
         },
       ],

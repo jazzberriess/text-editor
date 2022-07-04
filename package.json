@@ -14,7 +14,7 @@
     "build": "cd client && npm run build",
     "install": "cd client && npm install",
     "client": "cd client && npm start",
-    "heroku-cleanup": "cd client && npm install --dev"
+    "heroku-prebuild": "npm install --only=dev"
   },
   "keywords": [],
   "author": "",
