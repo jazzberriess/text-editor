@@ -1,4 +1,4 @@
-const { warmStrategyCache } = require('workbox-recipes');
+const { offlineFallback, warmStrategyCache } = require('workbox-recipes');
 const { CacheFirst, StaleWhileRevalidate } = require('workbox-strategies');
 const { registerRoute } = require('workbox-routing');
 const { CacheableResponsePlugin } = require('workbox-cacheable-response');
@@ -27,25 +27,35 @@ warmStrategyCache({
 registerRoute(({ request }) => request.mode === 'navigate', pageCache);
 
 // TODO: Implement asset caching
-//giving this a try from the docs: https://developer.chrome.com/docs/workbox/modules/workbox-recipes/
-  
-  // registerRoute(({request}) =>
-  // request.destination === 'style' ||
-  //   request.destination === 'script' ||
-  //   request.destination === 'worker',
-  
-  registerRoute (({ request }) => ["style", "script", "worker"].includes(request.destination),
+//Workbox docs: https://developer.chrome.com/docs/workbox/modules/workbox-recipes/
+
+registerRoute(
+  ({ request }) => ['style', 'script', 'worker'].includes(request.destination),
 
   new StaleWhileRevalidate({
     cacheName: 'static-assets-cache',
     plugins: [
       new CacheableResponsePlugin({
-  statuses: [0, 200],
-})
+        statuses: [0, 200],
+      }),
     ],
-
   })
 );
 
-
-// registerRoute();
+//IMAGE CACHING - because for some reason the icon image wasn't caching so...I added this here. https://youtu.be/utxTqssjp-o?t=155
+const matchCallback = ({ request }) => request.destination === 'image';
+registerRoute(
+  matchCallback,
+  new CacheFirst({
+    cacheName: 'images-cache',
+    plugins: [
+      new CacheableResponsePlugin({
+        statuses: [0, 200],
+      }),
+      new ExpirationPlugin({
+        maxEntries: 10,
+        maxAgeSeconds: 30 * 24 * 60 * 60,
+      }),
+    ],
+  })
+);

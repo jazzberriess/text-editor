@@ -192,6 +192,7 @@ h1 {
   background-color: #31a9e1;
 }
 
+/* toggle display for event handlers */
 .hidden {
   display: none;
 }
